@@ -17,9 +17,11 @@ library(foreign)
 
 ## user inputs
 classification <- '~/downloads/classification-2017-11-01-1156-landsatdemo/classification-2017-11-01-1156-landsatdemo.tif'
+## folder where your segmentation file is located
 segmentation_path <- '~/downloads/landsat_demo2/'
 mosaic <- '~/downloads/landsat_demo2/landsat_demo2.tif'
 segmentation_layername <- 'landsat_demo_segmentation_rad10_minregion10'
+## output file names
 oftseg_output_name <- 'landsat_demo_classification_segmentation.tif'
 decisiontree_output_name <- 'landsat_demo_decisiontree_seg_class.tif'
 # set the working directory
@@ -91,7 +93,7 @@ output <- paste0(segmentation_path,'output_',segmentation_layername,'.txt')
 df<-read.table(hist)
 head(df)
 nrow(df)
-names(df) <- c("id","total","forest","nonforest",'water','something','something2')
+names(df) <- c("id","total","forest","nonforest")
 df$smforest <- 0
 df$smnonforest <- 0
 df$class  <- 0
@@ -103,8 +105,8 @@ length(unique(out$id))
 head(out)
 out$code<-0
 
-# at least 2 forest pixels 
-# FACET: Fp+Fs+Fm > 20%
+# at least 2 forest pixels and 20% of the segment has forest pixels to be defined forest
+
 # two is nonforest
 tryCatch({
   out[
@@ -138,39 +140,23 @@ head(out)
 table(out$code, out$forest)
 
 write.table(file=output,out,sep=" ",quote=FALSE, col.names=FALSE,row.names=FALSE)
-nbands <- 1
-nbands <- nbands(raster(classification))
-norm_eq1 <- paste0("echo ",nbands)
-for(band in 1:nbands){
-  bstat <- 1
-  element <- paste0("echo \"#",band," ",6," / 100 *\"")
-  norm_eq1 <- paste0(norm_eq1," ;",element)
-}
 
-## Apply  normalization equation
-# system(sprintf(
-#   "%s | oft-calc -ot Byte %s %s",
-#   norm_eq,
-#   im_input,
-#   paste0(outdir,"/","tmp_norm.tif")
-# ))
 max(out$code)
-norm_eq1
 norm_eq <- paste0("echo ",output, " \"", 1, " ", 1,  " ", 6, " ", 99, "\"")
 norm_eq <- paste0("(",norm_eq,")")
 
 system(sprintf('%s | oft-reclass -oi %s %s',
                norm_eq,
-               paste0(segmentation_path,'tmp_',decisiontree_output_name, '.tif'),
+               paste0(segmentation_path,'tmp_',decisiontree_output_name),
                paste0(segmentation_path,segmentation_layername, '.tif')
 ))
 
 ## compress the output
 system(sprintf("gdal_translate -ot Byte -co COMPRESS=LZW %s %s",
-               paste0(segmentation_path,'tmp_',decisiontree_output_name, '.tif'),
-               paste0(segmentation_path, decisiontree_output_name, '.tif')))
+               paste0(segmentation_path,'tmp_',decisiontree_output_name),
+               paste0(segmentation_path, decisiontree_output_name)))
 
 # 
 # delete tmp files
 system(sprintf("rm %s",
-               paste0(segmentation_path,'tmp_',decisiontree_output_name, '.tif')))
+               paste0(segmentation_path,'tmp_',decisiontree_output_name)))
