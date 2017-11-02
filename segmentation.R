@@ -31,7 +31,7 @@ r.map1.xmin <- as.matrix(extent(r.map1))[1]
 r.map1.ymin <- as.matrix(extent(r.map1))[2]
 r.map1.xmax <- as.matrix(extent(r.map1))[3]
 r.map1.ymax <- as.matrix(extent(r.map1))[4]
-r.map1.maxval <- system(sprintf("oft-mm -um %s %s | grep 'Band 1 max = '",paste0(inputdir, map1), paste0(inputdir, map1)), intern = TRUE)
+r.map1.maxval <- system(sprintf("oft-mm -um %s %s | grep 'Band 1 max = '",paste0(classification), paste0(classification)), intern = TRUE)
 r.map1.maxval <- as.numeric(substring(r.map1.maxval,14))
 r.map1.xres <- res(r.map1)[1]
 r.map1.yres <- res(r.map1)[2]
