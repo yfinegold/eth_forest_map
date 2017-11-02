@@ -138,35 +138,39 @@ head(out)
 table(out$code, out$forest)
 
 write.table(file=output,out,sep=" ",quote=FALSE, col.names=FALSE,row.names=FALSE)
-# nbands <- 1
-# nbands <- nbands(raster(classification))
-# norm_eq <- paste0("echo ",nbands)
-# 
-# for(band in 1:nbands){
-#   bstat <- 1
-#   element <- paste0("echo \"#",band," ",r.map1.maxval, " / 100 *\"")
-#   norm_eq <- paste0(norm_eq," ;",element)
-# }
-# 
-# norm_eq <- paste0("(",norm_eq,")")
-# 
-# ## Apply  normalization equation
+nbands <- 1
+nbands <- nbands(raster(classification))
+norm_eq1 <- paste0("echo ",nbands)
+for(band in 1:nbands){
+  bstat <- 1
+  element <- paste0("echo \"#",band," ",6," / 100 *\"")
+  norm_eq1 <- paste0(norm_eq1," ;",element)
+}
+
+## Apply  normalization equation
 # system(sprintf(
 #   "%s | oft-calc -ot Byte %s %s",
 #   norm_eq,
 #   im_input,
 #   paste0(outdir,"/","tmp_norm.tif")
 # ))
-# max(out$code)
-# system(sprintf('%s | oft-reclass -oi %s %s \n  %s \n 1 \n 1 \n %s \n 0 \n eof',
-#                norm_eq,
-#                paste0(segmentation_path,'tmp_',decisiontree_output_name, '.tif'),
-#                paste0(segmentation_path,segmentation_layername, '.tif'),
-#                paste0 ()output,
-#                max(out$code)
-# ))
-# 
-# system "  $outdir/$base\_tmp.tif $in_dir/$base\_clump.tif ";
-# system "gdal_translate -ot Byte -co \"COMPRESS=LZW\" $outdir/$base\_tmp.tif $outdir/$base\_filtered.tif";
-# system "rm $outdir/$base\_tmp.tif";
+max(out$code)
+norm_eq1
+norm_eq <- paste0("echo ",output, " \"", 1, " ", 1,  " ", 6, " ", 99, "\"")
+norm_eq <- paste0("(",norm_eq,")")
 
+system(sprintf('%s | oft-reclass -oi %s %s',
+               norm_eq,
+               paste0(segmentation_path,'tmp_',decisiontree_output_name, '.tif'),
+               paste0(segmentation_path,segmentation_layername, '.tif')
+))
+
+## compress the output
+system(sprintf("gdal_translate -ot Byte -co COMPRESS=LZW %s %s",
+               paste0(segmentation_path,'tmp_',decisiontree_output_name, '.tif'),
+               paste0(segmentation_path, decisiontree_output_name, '.tif')))
+
+# 
+# delete tmp files
+system(sprintf("rm %s",
+               paste0(segmentation_path,'tmp_',decisiontree_output_name, '.tif')))
