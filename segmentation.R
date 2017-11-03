@@ -19,11 +19,19 @@ library(foreign)
 classification <- '~/downloads/classification-2017-11-01-1156-landsatdemo/classification-2017-11-01-1156-landsatdemo.tif'
 ## folder where your segmentation file is located
 segmentation_path <- '~/downloads/landsat_demo2/'
-mosaic <- '~/downloads/landsat_demo2/landsat_demo2.tif'
 segmentation_layername <- 'landsat_demo_segmentation_rad10_minregion10'
 ## output file names
 oftseg_output_name <- 'landsat_demo_classification_segmentation.tif'
 decisiontree_output_name <- 'landsat_demo_decisiontree_seg_class.tif'
+
+## input class names in order
+numberofclasses <- 4
+classes <- c('no data', 'forest', 'nonforest', 'water')
+class0 <- 'no data'
+class1 <- 'forest'
+class2 <- 'nonforest'
+class3 <- 'water'
+
 # set the working directory
 setwd(segmentation_path)
 
@@ -33,7 +41,7 @@ r.map1.xmin <- as.matrix(extent(r.map1))[1]
 r.map1.ymin <- as.matrix(extent(r.map1))[2]
 r.map1.xmax <- as.matrix(extent(r.map1))[3]
 r.map1.ymax <- as.matrix(extent(r.map1))[4]
-r.map1.maxval <- system(sprintf("oft-mm -um %s %s | grep 'Band 1 max = '",paste0(classification), paste0(classification)), intern = TRUE)
+r.map1.maxval <- system(sprintf("oft-mm -um %s %s | grep 'Band 1 max = '",classification, classification), intern = TRUE)
 r.map1.maxval <- as.numeric(substring(r.map1.maxval,14))
 r.map1.xres <- res(r.map1)[1]
 r.map1.yres <- res(r.map1)[2]
