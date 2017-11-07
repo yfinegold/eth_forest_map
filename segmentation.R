@@ -100,8 +100,13 @@ output <- paste0(segmentation_path,'output_',segmentation_layername,'.txt')
 
 df<-read.table(hist)
 head(df)
-nrow(df)
-names(df) <- c("id","total","forest","nonforest")
+print(paste0("There are ",nrow(df), " segments to classify"))
+tryCatch({
+  names(df) <- c("id","total",classes)
+}, error=function(e){cat(paste0("There are ", ncol(df)- 2,  " classes in the map but there are ", sum(table(classes)), " class names assigned.
+                                 Please change the variable classes to have only ",ncol(df)- 2, " classes \n"))}
+)
+
 df$smforest <- 0
 df$smnonforest <- 0
 df$class  <- 0
