@@ -8,7 +8,7 @@
 ## load libraries
 options(stringsAsFactors=FALSE)
 
-library(Hmisc)
+# library(Hmisc)
 library(sp)
 library(rgdal)
 library(raster)
