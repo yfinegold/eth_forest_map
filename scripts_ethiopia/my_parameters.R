@@ -5,13 +5,13 @@
 ####################################################################################################
 
 ### LOCATION AND NAME OF SUPERVISED CLASSIFICATION
-downclassdir <- paste0(rootdir,"downloads/classification-2017-landsat_demo2/")
-classif_name <- "classification-2017-landsat_demo2.tif"
+downclassdir <- paste0(rootdir,"downloads/ethiopia_2016_classification/")
+classif_name <- "ethiopia_2016_classification.tif"
 
 
 ### LOCATION AND NAME OF SATELLITE MOSAIC FOR SEGMENTATION
-downmosaidir <- paste0(rootdir,"downloads/landsat_demo2/")
-mosaic_name  <- "landsat_demo2.tif"
+downmosaidir <- paste0(rootdir,"downloads/ethiopia_2016_RNIRSWIR12/")
+mosaic_name  <- "ethiopia_2016_RNIRSWIR12.tif"
 
 ### TREE COVER THRESHOLD FOR GRC PRODUCT
 gfc_threshold <- 20

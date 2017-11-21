@@ -22,8 +22,8 @@ source(paste0(scriptdir,"my_parameters.R"),echo=TRUE)
 #############################################################
 ### DOWNLOAD AND CLIP GLOBAL PRODUCTS
 #############################################################
-# source(paste0(scriptdir,"s2_global_data/download_ESA_CCI_map.R"),echo=TRUE)
-# source(paste0(scriptdir,"s2_global_data/download_gfc_2016.R"),echo=TRUE)
+source(paste0(scriptdir,"s2_global_data/download_ESA_CCI_map.R"),echo=TRUE)
+source(paste0(scriptdir,"s2_global_data/download_gfc_2016.R"),echo=TRUE)
 source(paste0(scriptdir,"s2_global_data/clip_LC_products.R"),echo=TRUE)
 
 
