@@ -1,7 +1,9 @@
 ######################################### 
 ## number of samples per class and biome
 ## updated 21/11/2017
+## yelena.finegold@fao.org
 ######################################### 
+
 ### user parameters, works in SEPAL or windows, make sure to change these
 # enter the file path for the training data
 trainingdatafile <- '~/ethiopia/forestmapping/training_data_workshop_nov2017.csv'

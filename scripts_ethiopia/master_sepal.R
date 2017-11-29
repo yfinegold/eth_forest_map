@@ -29,8 +29,10 @@ source(paste0(scriptdir,"s2_global_data/clip_LC_products.R"),echo=TRUE)
 
 #############################################################
 ### GET CLASSIFICATION PERFORMED IN SEPAL AND MERGE TILES
+### OR PERFORM RANDOM FOREST CLASSIFICATION HERE
 #############################################################
 source(paste0(scriptdir,"s3_classification/merge_classification.R"),echo=TRUE)
+source(paste0(scriptdir,"s3_classification/runRF.R"),echo=TRUE)
 
 
 #############################################################
