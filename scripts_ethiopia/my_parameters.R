@@ -26,7 +26,7 @@ outdir <- "~/ethiopia/forestmapping/"
 outfinal <- 'f_nf_2016_v0.tif'
 
 # training data file directory and file name without extension
-training_dir <- '~/ethiopia/forestmapping'
+training_dir <- '~/ethiopia/forestmapping/training_data/'
 # name of shapefile
 trainingdata <- "training_data_workshop_nov2017_25mbuffer"
 # column name in trainingdata with classification codes
