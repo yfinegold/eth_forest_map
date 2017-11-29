@@ -32,6 +32,12 @@ trainingdata <- "training_data_workshop_nov2017_25mbuffer"
 # column name in trainingdata with classification codes
 column <- "recode"
 
+# enter the folder of the biomes shapefile
+biomesfolder <- '~/ethiopia/biomes/'
+
+# enter the file name of the biomes shapefile
+biomesfilename <- 'Biomes.shp' 
+
 ### CREATE A PSEUDO COLOR TABLE
 # my_classes <- c(11,12,13,21,22,23,24,25,26,31,32,33,41,42,43,44,45,51,61,62,63)
 # my_colors  <- col2rgb(c("brown","yellow","yellow", # agriculture 
