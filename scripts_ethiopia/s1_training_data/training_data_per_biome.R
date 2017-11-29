@@ -6,7 +6,7 @@
 
 ### user parameters, works in SEPAL or windows, make sure to change these
 # enter the file path for the training data
-trainingdatafile <- '~/ethiopia/forestmapping/training_data_workshop_nov2017.csv'
+trainingdatafile <- '~/ethiopia/forestmapping/training_data/training_combined/training_data_workshop_nov2017_25mbuffer.csv'
 
 # enter the folder of the biomes shapefile
 biomesfolder <- '~/ethiopia/biomes/'
