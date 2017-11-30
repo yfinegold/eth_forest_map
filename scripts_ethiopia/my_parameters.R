@@ -23,7 +23,7 @@ inputstack <- "lsat_srtm.vrt"
 
 # output file directory and file name
 outdir <- "~/ethiopia/forestmapping/"
-outfinal <- 'f_nf_2016_v0.tif'
+outfinal <- 'f_nf_2016_v1.tif'
 
 # training data file directory and file name without extension
 training_dir <- '~/ethiopia/forestmapping/training_data/'
