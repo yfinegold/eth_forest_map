@@ -12,8 +12,8 @@ time_start <- Sys.time()
 ####################################################################################
 
 #################### VERIFY SATELLITE IMAGE CHARACTERISTICS
-mosaic   <- brick(mosaic_name)
-mos_name <- mosaic_name
+mos_name <- paste0(mosaicdir,mosaic_name)
+mosaic   <- brick(mos_name)
 res(mosaic)
 proj4string(mosaic)
 extent(mosaic)
@@ -24,11 +24,11 @@ nbands(mosaic)
 ## Perform unsupervised classification
 ################################################################################
 spacing_km  <- res(mosaic)[1]*200
-nb_clusters <- 50
+nb_clusters <- 10
 
 ## Generate a systematic grid point
 system(sprintf("oft-gengrid.bash %s %s %s %s",
-               mosaic_name,
+               mos_name,
                spacing_km,
                spacing_km,
                paste0(seg_dir,"tmp_grid.tif")
@@ -42,7 +42,7 @@ system(sprintf("(echo 2 ; echo 3) | oft-extr -o %s %s %s",
                ))
 
 #################### Run k-means unsupervised classification
-system(sprintf("(echo %s; echo %s) | oft-kmeans -o %s -i %s",
+system(sprintf("(echo %s ; echo %s) | oft-kmeans -o %s -i %s",
                paste0(seg_dir,"tmp_grid.txt"),
                nb_clusters,
                paste0(seg_dir,"tmp_segs_km.tif"),

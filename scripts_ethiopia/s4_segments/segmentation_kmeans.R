@@ -10,6 +10,8 @@ time_start <- Sys.time()
 ####################################################################################
 ####### Segment satellite mosaic
 ####################################################################################
+province     <- "Maputo"
+mosaic_name  <- paste0(mosaicdir,mosaic_base,"_",province,".tif")
 
 #################### VERIFY SATELLITE IMAGE CHARACTERISTICS
 mosaic   <- brick(mosaic_name)
@@ -99,7 +101,7 @@ system(sprintf("oft-clump -i %s -o %s -um %s",
 #################### COMPRESS
 system(sprintf("gdal_translate -ot UInt32 -co COMPRESS=LZW %s %s",
                paste0(seg_dir,"tmp_clump_segs_mmu.tif"),
-               paste0(seg_dir,"segs_mmu_id.tif")
+               paste0(seg_dir,"segs_kmeans_mmu_",province,".tif")
                ))
 
 #################### CLEAN
