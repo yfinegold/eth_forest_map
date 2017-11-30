@@ -7,75 +7,48 @@
 ####################################################################################################
 time_start <- Sys.time() 
 
+province <- "Gaza"
+mosaic_name  <- paste0(downmosaidir,mosaic_base,"_",province,".tif")
+
 ####################################################################################
 ####### Segment satellite mosaic
 ####################################################################################
 
 #################### VERIFY SATELLITE IMAGE CHARACTERISTICS
+
 mosaic   <- brick(mosaic_name)
-mos_name <- mosaic_name
 res(mosaic)
 proj4string(mosaic)
 extent(mosaic)
 nbands(mosaic)
 
+#################### PERFORM SEGMENTATION USING THE OTB-SEG ALGORITHM
+# system(sprintf("gdal_translate -srcwin 0 3000 5000 5000 -co COMPRESS=LZW %s %s",
+#                mosaic_name,
+#                paste0(seg_dir,"tile_5000.tif")
+# ))
 
-################################################################################
-## Perform unsupervised classification
-################################################################################
-spacing_km  <- res(mosaic)[1]*200
-nb_clusters <- 50
-
-## Generate a systematic grid point
-system(sprintf("oft-gengrid.bash %s %s %s %s",
+#################### PERFORM SEGMENTATION USING THE OTB-SEG ALGORITHM
+system(sprintf("otbcli_MeanShiftSmoothing -in %s -fout %s -foutpos %s -spatialr 16 -ranger 16 -thres 0.1 -maxiter 10",
                mosaic_name,
-               spacing_km,
-               spacing_km,
-               paste0(seg_dir,"tmp_grid.tif")
+               #paste0(seg_dir,"tile_5000.tif"),
+               paste0(seg_dir,"smooth.tif"),
+               paste0(seg_dir,"position.tif")
                ))
 
-## Extract spectral signature
-system(sprintf("(echo 2 ; echo 3) | oft-extr -o %s %s %s",
-               paste0(seg_dir,"tmp_grid.txt"),
-               paste0(seg_dir,"tmp_grid.tif"),
-               mos_name
+system(sprintf("otbcli_LSMSSegmentation -in %s -inpos %s -out %s -spatialr 5 -ranger 15 -minsize 0 -tilesizex 256 -tilesizey 256",
+               paste0(seg_dir,"smooth.tif"),
+               paste0(seg_dir,"position.tif"),
+               paste0(seg_dir,"tmp_seg_lsms.tif")
                ))
 
-#################### Run k-means unsupervised classification
-system(sprintf("(echo %s; echo %s) | oft-kmeans -o %s -i %s",
-               paste0(seg_dir,"tmp_grid.txt"),
-               nb_clusters,
-               paste0(seg_dir,"tmp_segs_km.tif"),
-               mos_name
-))
 
-#################### SIEVE RESULTS x2
-system(sprintf("gdal_sieve.py -st %s %s %s",
-               2,
-               paste0(seg_dir,"tmp_segs_km.tif"),
-               paste0(seg_dir,"tmp_sieve_segs_km.tif")
-))
+system(sprintf("otbcli_LSMSSmallRegionsMerging -in %s -inseg %s -out %s -minsize 20 -tilesizex 256 -tilesizey 256",
+               paste0(seg_dir,"smooth.tif"),
+               paste0(seg_dir,"tmp_seg_lsms.tif"),
+               paste0(seg_dir,"merged_seg_lsms_",province,".tif")
+               ))
 
-#################### SIEVE RESULTS x4
-system(sprintf("gdal_sieve.py -st %s %s %s",
-               4,
-               paste0(seg_dir,"tmp_sieve_segs_km.tif"),
-               paste0(seg_dir,"tmp_sieve_sieve_segs_km.tif")
-))
-
-#################### SIEVE RESULTS x8
-system(sprintf("gdal_sieve.py -st %s %s %s",
-               8,
-               paste0(seg_dir,"tmp_sieve_sieve_segs_km.tif"),
-               paste0(seg_dir,"tmp_sieve_segs_km.tif")
-))
-
-#################### SIEVE RESULTS x12 --> ~10000m2
-system(sprintf("gdal_sieve.py -st %s %s %s",
-               12,
-               paste0(seg_dir,"tmp_sieve_segs_km.tif"),
-               paste0(seg_dir,"tmp_mmu_segs_km.tif")
-))
 
 #################### COMPRESS
 system(sprintf("gdal_translate -ot Byte -co COMPRESS=LZW %s %s",
